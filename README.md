@@ -15,4 +15,5 @@
     - Sass
     - Axios
 
-# ML Chatbot
+# ML-Approve-Events
+- Python Tensorflow model to predict if a submitted event is real or not
