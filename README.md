@@ -8,5 +8,9 @@
 
 # Client
 - React
+  - Dependencies
+    - React-Router-DOM
+    - Zustand
+    - MUI
 
 # ML Chatbot
