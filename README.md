@@ -12,5 +12,7 @@
     - React-Router-DOM
     - Zustand
     - MUI
+    - Sass
+    - Axios
 
 # ML Chatbot
