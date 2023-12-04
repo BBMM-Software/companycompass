@@ -5,8 +5,8 @@ import (
 )
 
 func EnvironmentInit(){
-	os.Setenv("dbUsername","adrian")
-	os.Setenv("dbPassword","Access4Adrian")
-	os.Setenv("dbUrl","moth5002.go.ro:3306")
-	os.Setenv("dbName","HubA")
+	os.Setenv("dbUsername","")
+	os.Setenv("dbPassword","")
+	os.Setenv("dbUrl","")
+	os.Setenv("dbName","")
 }
