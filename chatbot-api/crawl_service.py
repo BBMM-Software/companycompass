@@ -140,7 +140,6 @@ def remove_newlines(serie):
     return serie
 
 
-
 def createCsv(domain, fileName):
     if not os.path.exists("data/scraped"):
         os.mkdir("data/scraped")
@@ -177,7 +176,6 @@ def createCsv(domain, fileName):
 
     # Tokenize the text and save the number of tokens to a new column
     df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-
 
 
     
