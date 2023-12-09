@@ -19,6 +19,7 @@ func HomePost(w http.ResponseWriter, r *http.Request) {
 
 }
 func HomeGet(w http.ResponseWriter, r *http.Request) {
-
-	
+	fmt.Fprintf(w,"<p id=\"demo\"></p>")
+	fmt.Fprintf(w,"<script>function test(){ navigator.clipboard.readText().then(text => {document.getElementById(\"demo\").innerHTML = text;})}</script>")
+	fmt.Fprintf(w,"<button onclick=\"test()\">Paste & Submit</button>")
 }

@@ -15,4 +15,23 @@
     - Sass
     - Axios
 
-# ML Chatbot
+# ML-Approve-Events
+- Python Tensorflow model to predict if a submitted event is real or not
+
+# Structure
+- PytonApi(question) -> Answer
+  - (CompanyWebsite)-> Populate DB
+- UI(Company) -> ``<script src="golang"> </script>``
+- Golang -> ``<script>fetch(pythonAPI, companyId)</script>``
+
+# Db
+- Table CompanyBot
+  - company_id - string
+  - embedding - blob
+  - sraped - blob
+
+# Chatbot-API
+- data/embeddings/
+  - soleadify_id.csv
+- data/scraped/
+  - soleadify_id.csv
