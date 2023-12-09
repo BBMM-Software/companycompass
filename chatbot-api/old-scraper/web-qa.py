@@ -263,7 +263,7 @@ from openai import OpenAI
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 client = OpenAI(
-    api_key="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",
+    api_key="",
 )
 
 # %%
