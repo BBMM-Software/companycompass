@@ -6,7 +6,6 @@ from collections import deque
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 import os
-
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
 class HyperlinkParser(HTMLParser):

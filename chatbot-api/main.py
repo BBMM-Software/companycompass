@@ -1,6 +1,6 @@
 from flask import Flask, request
 from urllib.parse import urlparse
-from gptFunctions import *
+import crawl_service
 
 app = Flask("chatbot-api")
 
@@ -13,8 +13,8 @@ def scrape():
     return 'Failed to provide company_website_url query param!'
   domain = urlparse(url).netloc
   print(url, domain)
-  crawl(url)
-  createCsv(domain, domain)
+  crawl_service.crawl(url)
+  crawl_service.createCsv(domain, domain)
 
   return 'Success'
   
