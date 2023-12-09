@@ -248,7 +248,7 @@ def createCsv(domain, fileName):
     df.shape
     config = dotenv_values(".env")
     client = OpenAI(
-        api_key="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",
+        api_key="",
     )
 
     
