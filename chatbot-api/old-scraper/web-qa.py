@@ -1,4 +1,4 @@
-# %%
+ 
 import requests
 import re
 import urllib.request
@@ -8,7 +8,7 @@ from html.parser import HTMLParser
 from urllib.parse import urlparse
 import os
 
-# %%
+ 
 # Regex pattern to match a URL
 HTTP_URL_PATTERN = r'^http[s]*://.+'
 
@@ -16,7 +16,7 @@ HTTP_URL_PATTERN = r'^http[s]*://.+'
 domain = "www.cnfb.ro"
 full_url = "https://www.cnfb.ro/"
 
-# %%
+ 
 
 # Create a class to parse the HTML and get the hyperlinks
 class HyperlinkParser(HTMLParser):
@@ -139,7 +139,7 @@ def crawl(url):
 
 crawl(full_url)
 
-# %%
+ 
 def remove_newlines(serie):
     serie = serie.str.replace('\n', ' ')
     serie = serie.str.replace('\\n', ' ')
@@ -147,7 +147,7 @@ def remove_newlines(serie):
     serie = serie.str.replace('  ', ' ')
     return serie
 
-# %%
+ 
 import pandas as pd
 
 if not os.path.exists("processed"):
@@ -175,7 +175,7 @@ df['text'] = df.fname + ". " + remove_newlines(df.text)
 df.to_csv('processed/scraped.csv')
 df.head()
 
-# %%
+ 
 import tiktoken
 
 # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
@@ -190,7 +190,7 @@ df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 # Visualize the distribution of the number of tokens per row using a histogram
 df.n_tokens.hist()
 
-# %%
+ 
 max_tokens = 500
 
 # Function to split the text into chunks of a maximum number of tokens
@@ -250,15 +250,15 @@ for row in df.iterrows():
     else:
         shortened.append( row[1]['text'] )
 
-# %%
+ 
 df = pd.DataFrame(shortened, columns = ['text'])
 df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 df.n_tokens.hist()
 
-# %%
+ 
 df.shape
 
-# %%
+ 
 from openai import OpenAI
 from dotenv import dotenv_values
 config = dotenv_values(".env")
@@ -266,12 +266,12 @@ client = OpenAI(
     api_key="",
 )
 
-# %%
+ 
 df['embeddings'] = df.text.apply(lambda x:  client.embeddings.create(input = x, model="text-embedding-ada-002").data[0].embedding)
 df.to_csv('processed/embeddings.csv')
 df.head()
 
-# %%
+ 
 import pandas as pd
 import numpy as np
 from ast import literal_eval
@@ -281,7 +281,7 @@ df['embeddings'] = df['embeddings'].apply(literal_eval).apply(np.array)
 
 df.head()
 
-# %%
+ 
 from embeddings_utils import *
 def create_context(
     question, df, max_len=1800, size="ada"
@@ -357,7 +357,7 @@ def answer_question(
         print(e)
         return ""
 
-# %%
+ 
 from embeddings_utils import *
 def create_context(
     question, df, max_len=1800, size="ada"
@@ -393,7 +393,7 @@ def create_context(
     # Return the context
     return "\n\n###\n\n".join(returns)
 
-# %%
+ 
 def answer_question(
     df,
     model="gpt-3.5-turbo",
