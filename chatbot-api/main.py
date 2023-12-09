@@ -2,14 +2,16 @@ from flask import Flask, request
 from urllib.parse import urlparse
 import crawl_service
 from openai import OpenAI
+from dotenv import load_dotenv
 import os
-
+from ask_service import *
 
 app = Flask("chatbot-api")
+load_dotenv()
 
 askServiceMap = {}
 client = OpenAI(
-		api_key=os.environ['OPEN_AI_KEY'],
+	api_key=os.getenv('OPEN_AI_KEY'),
 )
 crawl_service.client = client
 

@@ -111,7 +111,7 @@ def crawl(url):
         print(url) # for debugging and to see the progress
 
         # Save text from the url to a <url>.txt file
-        with open('text/'+local_domain+'/'+url[8:].replace("/", "_") + ".txt", "w", encoding="utf-8") as f:
+        with open('text/'+local_domain+'/'+url[8:].replace("/", "_").replace("?","_").replace("&","_") + ".txt", "w", encoding="utf-8") as f:
 
             # Get the text from the URL using BeautifulSoup
             soup = BeautifulSoup(requests.get(url).text, "html.parser")
@@ -178,8 +178,7 @@ def createCsv(domain, fileName):
     # Tokenize the text and save the number of tokens to a new column
     df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
-    # Visualize the distribution of the number of tokens per row using a histogram
-    df.n_tokens.hist()
+
 
     
     max_tokens = 500
@@ -244,18 +243,12 @@ def createCsv(domain, fileName):
     
     df = pd.DataFrame(shortened, columns = ['text'])
     df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-    df.n_tokens.hist()
-    df.shape
-    config = dotenv_values(".env")
 
     
     df['embeddings'] = df.text.apply(lambda x:  client.embeddings.create(input = x, model="text-embedding-ada-002").data[0].embedding)
     df.to_csv('data/embeddings/'+fileName+'.csv')
-    df.head()
 
     df=pd.read_csv('data/embeddings/'+fileName+'.csv', index_col=0)
     df['embeddings'] = df['embeddings'].apply(literal_eval).apply(np.array)
-
-    df.head()
 
     return df
