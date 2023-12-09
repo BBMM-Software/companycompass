@@ -6,8 +6,14 @@ from collections import deque
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 import os
-HTTP_URL_PATTERN = r'^http[s]*://.+'
+import pandas as pd
+import tiktoken
+import pandas as pd
+import numpy as np
+from ast import literal_eval
 
+HTTP_URL_PATTERN = r'^http[s]*://.+'
+client = {}
 class HyperlinkParser(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -133,13 +139,7 @@ def remove_newlines(serie):
     serie = serie.str.replace('  ', ' ')
     return serie
 
-import pandas as pd
-import tiktoken
-from openai import OpenAI
-from dotenv import dotenv_values
-import pandas as pd
-import numpy as np
-from ast import literal_eval
+
 
 def createCsv(domain, fileName):
     if not os.path.exists("data/scraped"):
@@ -247,9 +247,6 @@ def createCsv(domain, fileName):
     df.n_tokens.hist()
     df.shape
     config = dotenv_values(".env")
-    client = OpenAI(
-        api_key=os.environ['OPEN_AI_KEY'],
-    )
 
     
     df['embeddings'] = df.text.apply(lambda x:  client.embeddings.create(input = x, model="text-embedding-ada-002").data[0].embedding)

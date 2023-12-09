@@ -7,7 +7,7 @@ import os
 def search_company_data(company_name):
 	url = 'https://data.veridion.com/search/v1/companies'
 	headers = {
-			'x-api-key': os.getenv("VERIDION_SEARCH_API_KEY"),
+			'x-api-key': os.environ["VERIDION_SEARCH_API_KEY"],
 			'Content-type': 'application/json',
 	}
 	data = {
@@ -28,7 +28,7 @@ def search_company_data(company_name):
 def get_company_data(company_name, website):
 	url = 'https://data.veridion.com/match/v4/companies'
 	headers = {
-			'x-api-key': os.getenv("VERIDION_MATCH_API_KEY"),
+			'x-api-key':os.environ["VERIDION_MATCH_API_KEY"],
 			'Content-type': 'application/json',
 	}
 	data = {

@@ -1,10 +1,17 @@
 from flask import Flask, request
 from urllib.parse import urlparse
 import crawl_service
+from openai import OpenAI
+import os
+
 
 app = Flask("chatbot-api")
 
 askServiceMap = {}
+client = OpenAI(
+		api_key=os.environ['OPEN_AI_KEY'],
+)
+crawl_service.client = client
 
 @app.route('/scrape', methods=['POST']) # company_site => generate csv 
 def scrape():
