@@ -35,3 +35,8 @@
   - soleadify_id.csv
 - data/scraped/
   - soleadify_id.csv
+
+# API Key - saved in env vars
+VERIDION_MATCH_API_KEY
+VERIDION_SEARCH_API_KEY
+OPENAI_API_KEY
