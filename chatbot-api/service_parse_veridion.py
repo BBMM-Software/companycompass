@@ -1,6 +1,9 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Search companies by name return large array
 # For now used for testing
@@ -92,4 +95,6 @@ def describe_company(data):
     
     return description
 
-print(describe_company(get_company_data("Apple Inc.", "apple.com")))
+def get_hr_parsed(company_name, company_website_url):
+    return describe_company(get_company_data(company_name, company_website_url))
+     
