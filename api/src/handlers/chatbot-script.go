@@ -41,8 +41,8 @@ func GenerateChatbotScript(w http.ResponseWriter, r *http.Request) {
   domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
 	filePath := "static/"+domain+".js"
 	
-	company_name_pattern := "%%company_name%%"
-	company_website_url_pattern := "%%company_website_url%%"
+	company_name_pattern := "^company_name^"
+	company_website_url_pattern := "^company_website_url^"
 
 	contentString := string(content)
 	contentString = strings.Replace(contentString, company_name_pattern, "'"+company_name+"'", -1)
@@ -72,7 +72,7 @@ func GetChatbotScript(w http.ResponseWriter, r *http.Request) {
 	if services.LogError(services.LogErrorArgs{Err: err, W: w}) {
 		return
 	}
-	fmt.Fprintf(w, string(content))
+	fmt.Fprintf(w,"%s", string(content))
 }
 
 func callCrawler(company_name string, company_website_url string){
