@@ -396,7 +396,6 @@ def create_context(
  
 def answer_question(
     df,
-    model="gpt-3.5-turbo",
     question="Am I allowed to publish model outputs to Twitter, without a human review?",
     max_len=1800,
     size="ada",
