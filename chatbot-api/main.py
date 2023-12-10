@@ -38,4 +38,8 @@ def ask():
   askService = askServiceMap[company_site]
   return askService.ask_question(question)
 
+@app.route('/', methods=['GET'])
+def index():
+  return 'API OK'
+
 app.run(port=1280, debug=True)
