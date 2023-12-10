@@ -11,8 +11,8 @@ import (
 )
 
 var routes = []route{
-	newRoute("POST", "/", handlers.HomePost),
-	newRoute("GET", "/", handlers.HomeGet),
+	newRoute("GET", "/generate-chatbot-script", handlers.GenerateChatbotScript),
+	newRoute("GET", "/static/([^/]+)", handlers.GetChatbotScript),
 	//newRoute("GET", "/contact", contact),
 	//newRoute("GET", "/api/widgets", apiGetWidgets),
 	//newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/delete", apiDeleteWidgetPart),
