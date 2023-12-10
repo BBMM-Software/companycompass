@@ -13,9 +13,6 @@ import (
 var routes = []route{
 	newRoute("GET", "/generate-chatbot-script", handlers.GenerateChatbotScript),
 	newRoute("GET", "/static/([^/]+)", handlers.GetChatbotScript),
-	//newRoute("GET", "/contact", contact),
-	//newRoute("GET", "/api/widgets", apiGetWidgets),
-	//newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/delete", apiDeleteWidgetPart),
 }
 
 func newRoute(method, pattern string, handler http.HandlerFunc) route {

@@ -32,8 +32,6 @@ jupyter_client==7.4.8
 jupyter_core==5.1.3
 kiwisolver==1.4.4
 lxml==4.9.2
-matplotlib==3.6.3
-matplotlib-inline==0.1.6
 multidict==6.0.4
 nest-asyncio==1.5.6
 numpy==1.24.1
@@ -46,7 +44,6 @@ pickleshare==0.7.5
 Pillow==9.4.0
 pipreqs==0.4.12
 platformdirs==2.6.2
-plotly==5.12.0
 prompt-toolkit==3.0.36
 psutil==5.9.4
 ptyprocess==0.7.0
