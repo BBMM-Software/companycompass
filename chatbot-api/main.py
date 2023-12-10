@@ -5,9 +5,13 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 from ask_service import *
+from flask_cors import CORS, cross_origin
+
 
 app = Flask("chatbot-api")
 load_dotenv()
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 askServiceMap = {}
 client = OpenAI(
@@ -16,6 +20,7 @@ client = OpenAI(
 crawl_service.client = client
 
 @app.route('/scrape', methods=['POST']) # company_site => generate csv 
+@cross_origin()
 def scrape():
   url = request.args.get('company_website_url')
   if not url:
@@ -28,6 +33,7 @@ def scrape():
   return 'Success'
   
 @app.route('/ask') # question => response
+@cross_origin()
 def ask():
   company_name = request.args.get("company_name")
   company_site = request.args.get("company_site")
