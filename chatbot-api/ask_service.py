@@ -3,7 +3,7 @@ import numpy as np
 from ast import literal_eval
 from urllib.parse import urlparse
 from embeddings_utils import *
-
+import service_parse_veridion
 
 CONTEXT_LENGTH = 1800
 
@@ -60,7 +60,7 @@ class AskService:
 		)
 		# If debug, print the raw model response
 		message = [
-			{"role": "system", "content": "Answer the question based on the context below\n\n"},
+			{"role": "system", "content": "You will be answering questions exclusively about the following company: "+service_parse_veridion.get_hr_parsed(self.company_name, self.company_site)+". Act like a bot helping a user that visits the company website by providing information about the specified company. The information from the website is summarized using only the provided description and the following context. Limit your knowledge and do not answer questions outside this scope.\n\n"},
 			{"role": "system", "content": "Context: " + context + "\n\n"},
 			{"role": "user", "content": question + "\n"},
 		]
