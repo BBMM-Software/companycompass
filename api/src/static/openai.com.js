@@ -5,8 +5,8 @@ const ConvertStringToHTML = function (str) {
 };
 
 const server_url = "http://127.0.0.1:1280/ask?";
-const company_name = 'Netrom'
-const company_website = 'https://www.netrom.nl/'
+const company_name = 'OpenAI'
+const company_website = 'https://openai.com/'
 
 const run = function () {
     const str = `<button

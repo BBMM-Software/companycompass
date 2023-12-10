@@ -64,6 +64,7 @@ const run = function () {
             align-items: center;
             padding-right: 20px;
             padding-left: 20px;
+            margin: 0;
         "
     >
         <h3>${company_name} served by CompanyCompass</h3>
@@ -77,7 +78,7 @@ const run = function () {
     <div
         id="messagesBody"
         style="
-            height: 330px;
+            height: 400px;
             border-top: 1px black solid;
             border-bottom: 1px black solid;
             padding: 10px;
