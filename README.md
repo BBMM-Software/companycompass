@@ -1,3 +1,4 @@
+![](./miscellaneous/companycompasslogo.jpg)
 # API
 - Backend project that uses Golang
   - Dependencies
