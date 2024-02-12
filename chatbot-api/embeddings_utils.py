@@ -11,9 +11,9 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
 def distances_from_embeddings(
-    query_embedding: List[float],
-    embeddings: List[List[float]],
-    distance_metric="cosine",
+        query_embedding: List[float],
+        embeddings: List[List[float]],
+        distance_metric="cosine",
 ) -> List[List]:
     """Return the distances between a query embedding and a list of embeddings."""
     distance_metrics = {

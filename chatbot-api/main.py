@@ -18,6 +18,7 @@ client = OpenAI(
 )
 crawl_service.client = client
 
+
 def check_true(qp: str):
     return qp.lower() == "true"
 
@@ -73,7 +74,7 @@ def generate():
 
     if crawl:
         crawl_service.crawl(company_url)
-        crawl_service.createCsv(domain, domain)
+        crawl_service.create_csv(domain, domain)
 
     path_var = "script?domain=" + domain
 

@@ -26,7 +26,7 @@ class HyperlinkParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
 
-        # If the tag is an anchor tag and it has an href attribute, add the href attribute to the list of hyperlinks
+        # If the tag is an anchor tag, and it has a href attribute, add the href attribute to the list of hyperlinks
         if tag == "a" and "href" in attrs:
             self.hyperlinks.append(attrs["href"])
 
@@ -42,8 +42,10 @@ def get_hyperlinks(url):
             "sec-ch-ua": '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
             "sec-ch-ua-mobile": "?0",
             "upgrade-insecure-requests": "1",
-            "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/92.0.4515.107 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,"
+                      "/;q=0.8,application/signed-exchange;v=b3;q=0.9",
             "sec-fetch-site": "none",
             "sec-fetch-mode": "navigate",
             "sec-fetch-user": "?1",
@@ -109,7 +111,7 @@ def crawl(url):
     queue = deque([url])
 
     # Create a set to store the URLs that have already been seen (no duplicates)
-    seen = set([url])
+    seen = {url}
 
     # Create a directory to store the text files
     if not os.path.exists("text/"):
@@ -168,7 +170,7 @@ def remove_newlines(serie):
     return serie
 
 
-def createCsv(domain, fileName):
+def create_csv(domain, file_name):
     if not os.path.exists("data/scraped"):
         os.mkdir("data/scraped")
     if not os.path.exists("data/embeddings"):
@@ -176,10 +178,10 @@ def createCsv(domain, fileName):
 
     # Create a list to store the text files
     texts = []
-    fileCount = 0
+    file_count = 0
     # Get all the text files in the text directory
     for file in os.listdir("text/" + domain + "/"):
-        fileCount += 1
+        file_count += 1
         # Open the file and read the text
         with open("text/" + domain + "/" + file, "r", encoding="utf-8") as f:
             text = f.read()
@@ -194,20 +196,20 @@ def createCsv(domain, fileName):
                     text,
                 )
             )
-        if fileCount > 100:
+        if file_count > 100:
             break
     # Create a dataframe from the list of texts
     df = pd.DataFrame(texts, columns=["fname", "text"])
 
     # Set the text column to be the raw text with the newlines removed
     df["text"] = df.fname + ". " + remove_newlines(df.text)
-    df.to_csv("data/scraped/" + fileName + ".csv")
+    df.to_csv("data/scraped/" + file_name + ".csv")
     df.head()
 
     # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    df = pd.read_csv("data/scraped/" + fileName + ".csv", index_col=0)
+    df = pd.read_csv("data/scraped/" + file_name + ".csv", index_col=0)
     df.columns = ["title", "text"]
 
     # Tokenize the text and save the number of tokens to a new column
@@ -276,9 +278,9 @@ def createCsv(domain, fileName):
         .data[0]
         .embedding
     )
-    df.to_csv("data/embeddings/" + fileName + ".csv")
+    df.to_csv("data/embeddings/" + file_name + ".csv")
 
-    df = pd.read_csv("data/embeddings/" + fileName + ".csv", index_col=0)
+    df = pd.read_csv("data/embeddings/" + file_name + ".csv", index_col=0)
     df["embeddings"] = df["embeddings"].apply(literal_eval).apply(np.array)
 
     return df
