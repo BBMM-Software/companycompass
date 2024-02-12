@@ -4,7 +4,7 @@ const ConvertStringToHTML = function (str) {
     return doc.body;
 };
 
-const server_url = "http://127.0.0.1:1280/ask?";
+const server_url = "http://127.0.0.1:8080/ask?";
 const company_name = ^company_name^
 const company_website = ^company_website_url^
 
@@ -141,41 +141,41 @@ chatDiv.style.display = "none";
 };
 
 sendButton.onclick = () => {
-const inputChat = document.getElementById("inputChat");
-let question = inputChat.value;
-inputChat.value = "";
-console.log(question);
-sendButton.textContent = "Loading";
-sendButton.disabled = true;
-messageBody.appendChild(
-    ConvertStringToHTML(`<div style="width:100%; display:flex; justify-content:end; margin-bottom:10px">
-<div style="background-color: #bebebe; max-width: 80%;  padding: 5px; border-radius: 5px;" >${question}</div></div>`)
-);
-fetch(
-    server_url +
-        new URLSearchParams({
-            company_name: company_name,
-            company_site: company_website,
-            question: question,
-        })
-).then(
-    (response) => {
-        response.text().then((val) => {
-            console.log(val);
+    const inputChat = document.getElementById("inputChat");
+    let question = inputChat.value;
+    inputChat.value = "";
+    console.log(question);
+    sendButton.textContent = "Loading";
+    sendButton.disabled = true;
+    messageBody.appendChild(
+        ConvertStringToHTML(`<div style="width:100%; display:flex; justify-content:end; margin-bottom:10px">
+    <div style="background-color: #bebebe; max-width: 80%;  padding: 5px; border-radius: 5px;" >${question}</div></div>`)
+    );
+    fetch(
+        server_url +
+            new URLSearchParams({
+                company_name: company_name,
+                company_site: company_website,
+                question: question,
+            })
+    ).then(
+        (response) => {
+            response.text().then((val) => {
+                console.log(val);
+                sendButton.textContent = "Send";
+                sendButton.disabled = false;
+                messageBody.appendChild(
+                    ConvertStringToHTML(`<div style="width:100%; display:flex; justify-content:start; margin-bottom:10px">
+            <div style="background-color: #e2e2e2; max-width: 80%;  padding: 5px; border-radius: 5px;" >${val}</div></div>`)
+                );
+            });
+        },
+        (rejection) => {
+            console.log(response);
             sendButton.textContent = "Send";
             sendButton.disabled = false;
-            messageBody.appendChild(
-                ConvertStringToHTML(`<div style="width:100%; display:flex; justify-content:start; margin-bottom:10px">
-        <div style="background-color: #e2e2e2; max-width: 80%;  padding: 5px; border-radius: 5px;" >${val}</div></div>`)
-            );
-        });
-    },
-    (rejection) => {
-        console.log(response);
-        sendButton.textContent = "Send";
-        sendButton.disabled = false;
-    }
-);
+        }
+    );
 };
 }
 

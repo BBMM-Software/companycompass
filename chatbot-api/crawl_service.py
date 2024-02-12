@@ -1,19 +1,21 @@
-import requests
+import os
 import re
 import urllib.request
-from bs4 import BeautifulSoup
+from ast import literal_eval
 from collections import deque
 from html.parser import HTMLParser
 from urllib.parse import urlparse
-import os
-import pandas as pd
-import tiktoken
-import pandas as pd
-import numpy as np
-from ast import literal_eval
 
-HTTP_URL_PATTERN = r'^http[s]*://.+'
+import numpy as np
+import pandas as pd
+import requests
+import tiktoken
+from bs4 import BeautifulSoup
+
+HTTP_URL_PATTERN = r"^http[s]*://.+"
 client = {}
+
+
 class HyperlinkParser(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -28,9 +30,9 @@ class HyperlinkParser(HTMLParser):
         if tag == "a" and "href" in attrs:
             self.hyperlinks.append(attrs["href"])
 
+
 # Function to get the hyperlinks from a URL
 def get_hyperlinks(url):
-    
     # Try to open the URL and read the HTML
     try:
         req = urllib.request.Request(url)
@@ -48,17 +50,16 @@ def get_hyperlinks(url):
             "sec-fetch-dest": "document",
             "accept-language": "en-US,en;q=0.9",
         }
-        for k1, k2 in headers.items(): 
+        for k1, k2 in headers.items():
             req.add_header(k1, k2)
         # Open the URL and read the HTML
         with urllib.request.urlopen(req) as response:
-
             # If the response is not HTML, return an empty list
-            if not response.info().get('Content-Type').startswith("text/html"):
+            if not response.info().get("Content-Type").startswith("text/html"):
                 return []
-            
+
             # Decode the HTML
-            html = response.read().decode('utf-8')
+            html = response.read().decode("utf-8")
     except Exception as e:
         print(e)
         return []
@@ -68,6 +69,7 @@ def get_hyperlinks(url):
     parser.feed(html)
 
     return parser.hyperlinks
+
 
 # Function to get the hyperlinks from a URL that are within the same domain
 def get_domain_hyperlinks(local_domain, url):
@@ -111,25 +113,31 @@ def crawl(url):
 
     # Create a directory to store the text files
     if not os.path.exists("text/"):
-            os.mkdir("text/")
+        os.mkdir("text/")
 
-    if not os.path.exists("text/"+local_domain+"/"):
-            os.mkdir("text/" + local_domain + "/")
+    if not os.path.exists("text/" + local_domain + "/"):
+        os.mkdir("text/" + local_domain + "/")
 
     # Create a directory to store the csv files
     if not os.path.exists("data/"):
-            os.mkdir("data/")
+        os.mkdir("data/")
 
     # While the queue is not empty, continue crawling
     while queue:
-
         # Get the next URL from the queue
         url = queue.pop()
-        print(url) # for debugging and to see the progress
+        print(url)  # for debugging and to see the progress
 
         # Save text from the url to a <url>.txt file
-        with open('text/'+local_domain+'/'+url[8:].replace("/", "_").replace("?","_").replace("&","_") + ".txt", "w", encoding="utf-8") as f:
-
+        with open(
+            "text/"
+            + local_domain
+            + "/"
+            + url[8:].replace("/", "_").replace("?", "_").replace("&", "_")
+            + ".txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
             # Get the text from the URL using BeautifulSoup
             soup = BeautifulSoup(requests.get(url).text, "html.parser")
 
@@ -137,9 +145,11 @@ def crawl(url):
             text = soup.get_text()
 
             # If the crawler gets to a page that requires JavaScript, it will stop the crawl
-            if ("You need to enable JavaScript to run this app." in text):
-                print("Unable to parse page " + url + " due to JavaScript being required")
-            
+            if "You need to enable JavaScript to run this app." in text:
+                print(
+                    "Unable to parse page " + url + " due to JavaScript being required"
+                )
+
             # Otherwise, write the text to the file in the text directory
             f.write(text)
 
@@ -149,11 +159,12 @@ def crawl(url):
                 queue.append(link)
                 seen.add(link)
 
+
 def remove_newlines(serie):
-    serie = serie.str.replace('\n', ' ')
-    serie = serie.str.replace('\\n', ' ')
-    serie = serie.str.replace('  ', ' ')
-    serie = serie.str.replace('  ', ' ')
+    serie = serie.str.replace("\n", " ")
+    serie = serie.str.replace("\\n", " ")
+    serie = serie.str.replace("  ", " ")
+    serie = serie.str.replace("  ", " ")
     return serie
 
 
@@ -164,7 +175,7 @@ def createCsv(domain, fileName):
         os.mkdir("data/embeddings")
 
     # Create a list to store the text files
-    texts=[]
+    texts = []
     fileCount = 0
     # Get all the text files in the text directory
     for file in os.listdir("text/" + domain + "/"):
@@ -174,47 +185,51 @@ def createCsv(domain, fileName):
             text = f.read()
 
             # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.
-            texts.append((file[11:-4].replace('-',' ').replace('_', ' ').replace('#update',''), text))
+            texts.append(
+                (
+                    file[11:-4]
+                    .replace("-", " ")
+                    .replace("_", " ")
+                    .replace("#update", ""),
+                    text,
+                )
+            )
         if fileCount > 100:
             break
     # Create a dataframe from the list of texts
-    df = pd.DataFrame(texts, columns = ['fname', 'text'])
+    df = pd.DataFrame(texts, columns=["fname", "text"])
 
     # Set the text column to be the raw text with the newlines removed
-    df['text'] = df.fname + ". " + remove_newlines(df.text)
-    df.to_csv('data/scraped/'+fileName+'.csv')
+    df["text"] = df.fname + ". " + remove_newlines(df.text)
+    df.to_csv("data/scraped/" + fileName + ".csv")
     df.head()
 
     # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    df = pd.read_csv('data/scraped/'+fileName+'.csv', index_col=0)
-    df.columns = ['title', 'text']
+    df = pd.read_csv("data/scraped/" + fileName + ".csv", index_col=0)
+    df.columns = ["title", "text"]
 
     # Tokenize the text and save the number of tokens to a new column
-    df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
+    df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
-
-    
     max_tokens = 500
 
     # Function to split the text into chunks of a maximum number of tokens
-    def split_into_many(text, max_tokens = max_tokens):
-
+    def split_into_many(text, max_tokens=max_tokens):
         # Split the text into sentences
-        sentences = text.split('. ')
+        sentences = text.split(". ")
 
         # Get the number of tokens for each sentence
         n_tokens = [len(tokenizer.encode(" " + sentence)) for sentence in sentences]
-        
+
         chunks = []
         tokens_so_far = 0
         chunk = []
 
         # Loop through the sentences and tokens joined together in a tuple
         for sentence, token in zip(sentences, n_tokens):
-
-            # If the number of tokens so far plus the number of tokens in the current sentence is greater 
+            # If the number of tokens so far plus the number of tokens in the current sentence is greater
             # than the max number of tokens, then add the chunk to the list of chunks and reset
             # the chunk and tokens so far
             if tokens_so_far + token > max_tokens:
@@ -222,7 +237,7 @@ def createCsv(domain, fileName):
                 chunk = []
                 tokens_so_far = 0
 
-            # If the number of tokens in the current sentence is greater than the max number of 
+            # If the number of tokens in the current sentence is greater than the max number of
             # tokens, go to the next sentence
             if token > max_tokens:
                 continue
@@ -236,34 +251,34 @@ def createCsv(domain, fileName):
             chunks.append(". ".join(chunk) + ".")
 
         return chunks
-        
 
     shortened = []
 
     # Loop through the dataframe
     for row in df.iterrows():
-
         # If the text is None, go to the next row
-        if row[1]['text'] is None:
+        if row[1]["text"] is None:
             continue
 
         # If the number of tokens is greater than the max number of tokens, split the text into chunks
-        if row[1]['n_tokens'] > max_tokens:
-            shortened += split_into_many(row[1]['text'])
-        
+        if row[1]["n_tokens"] > max_tokens:
+            shortened += split_into_many(row[1]["text"])
+
         # Otherwise, add the text to the list of shortened texts
         else:
-            shortened.append( row[1]['text'] )
+            shortened.append(row[1]["text"])
 
-    
-    df = pd.DataFrame(shortened, columns = ['text'])
-    df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
+    df = pd.DataFrame(shortened, columns=["text"])
+    df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
-    
-    df['embeddings'] = df.text.apply(lambda x:  client.embeddings.create(input = x, model="text-embedding-ada-002").data[0].embedding)
-    df.to_csv('data/embeddings/'+fileName+'.csv')
+    df["embeddings"] = df.text.apply(
+        lambda x: client.embeddings.create(input=x, model="text-embedding-ada-002")
+        .data[0]
+        .embedding
+    )
+    df.to_csv("data/embeddings/" + fileName + ".csv")
 
-    df=pd.read_csv('data/embeddings/'+fileName+'.csv', index_col=0)
-    df['embeddings'] = df['embeddings'].apply(literal_eval).apply(np.array)
+    df = pd.read_csv("data/embeddings/" + fileName + ".csv", index_col=0)
+    df["embeddings"] = df["embeddings"].apply(literal_eval).apply(np.array)
 
     return df
