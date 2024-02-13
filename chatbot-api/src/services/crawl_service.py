@@ -11,10 +11,9 @@ import pandas as pd
 import requests
 import tiktoken
 from bs4 import BeautifulSoup
+from src.openai_client import openai_client as client
 
 HTTP_URL_PATTERN = r"^http[s]*://.+"
-client = {}
-
 
 class HyperlinkParser(HTMLParser):
     def __init__(self):
@@ -162,12 +161,12 @@ def crawl(url):
                 seen.add(link)
 
 
-def remove_newlines(serie):
-    serie = serie.str.replace("\n", " ")
-    serie = serie.str.replace("\\n", " ")
-    serie = serie.str.replace("  ", " ")
-    serie = serie.str.replace("  ", " ")
-    return serie
+def remove_newlines(text):
+    text = text.str.replace("\n", " ")
+    text = text.str.replace("\\n", " ")
+    text = text.str.replace("  ", " ")
+    text = text.str.replace("  ", " ")
+    return text
 
 
 def create_csv(domain, file_name):

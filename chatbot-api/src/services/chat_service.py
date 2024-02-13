@@ -2,14 +2,15 @@ import pandas as pd
 import numpy as np
 from ast import literal_eval
 from urllib.parse import urlparse
-from embeddings_utils import *
-import service_parse_veridion
+from ..utils import distances_from_embeddings
+from . import veridion_service
+from src.openai_client import openai_client as client
+
 
 CONTEXT_LENGTH = 1800
 
-
 class AskService:
-    def __init__(self, company_name, company_site, client):
+    def __init__(self, company_name, company_site):
         self.company_name = company_name
         self.company_site = company_site
         self.client = client
@@ -60,7 +61,7 @@ class AskService:
         message = [
             {"role": "system",
              "content": "You will be answering questions exclusively about the following company: "
-                        + service_parse_veridion.get_hr_parsed(self.company_name, self.company_site)
+                        + veridion_service.get_hr_parsed(self.company_name, self.company_site)
                         + ". Act like a bot helping a user that visits the company website by providing "
                           "information about the specified company. The information from the website is "
                           "summarized using only the provided description and the following context. Limit "

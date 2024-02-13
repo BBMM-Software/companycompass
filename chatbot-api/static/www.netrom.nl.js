@@ -4,7 +4,7 @@ const ConvertStringToHTML = function (str) {
     return doc.body;
 };
 
-const server_url = "http://127.0.0.1:8080/ask?";
+const server_url = "http://127.0.0.1:8080/api/chat?";
 const company_name = "netrom"
 const company_website = "https://www.netrom.nl/"
 
