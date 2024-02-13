@@ -2,14 +2,14 @@ import pandas as pd
 import numpy as np
 from ast import literal_eval
 from urllib.parse import urlparse
-from ..utils import distances_from_embeddings
+from src.utils import distances_from_embeddings
 from . import veridion_service
 from src.openai_client import openai_client as client
 
 
 CONTEXT_LENGTH = 1800
 
-class AskService:
+class ChatService:
     def __init__(self, company_name, company_site):
         self.company_name = company_name
         self.company_site = company_site
@@ -51,7 +51,7 @@ class AskService:
         # Return the context
         return "\n\n###\n\n".join(returns)
 
-    def ask_question(self, question):
+    def ask(self, question):
         # Answer a question based on the most similar context from the dataframe texts
 
         context = self.create_context(

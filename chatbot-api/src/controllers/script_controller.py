@@ -24,7 +24,7 @@ def generate():
     company_name = request.args.get("company_name")
     company_url = request.args.get("company_url")
 
-    should_crawl = request.args.get("crawl", default=False, type=check_true)
+    crawl_ = request.args.get("crawl", default=False, type=check_true)
 
     domain = urlparse(company_url).netloc
     file_path = "static/" + domain + ".js"
@@ -43,7 +43,7 @@ def generate():
     new_file.write(content)
     new_file.close()
 
-    if should_crawl:
+    if crawl_:
         crawl(company_url)
         create_csv(domain, domain)
 

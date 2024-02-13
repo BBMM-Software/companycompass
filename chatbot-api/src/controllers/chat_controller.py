@@ -1,9 +1,9 @@
 from flask import Blueprint, request
-from ..services.chat_service import AskService
+from src.services.chat_service import ChatService
 
 chat = Blueprint("chat", __name__)
 
-askServiceMap = {}
+chatServiceMap = {}
 
 
 @chat.route("/chat")
@@ -11,8 +11,8 @@ def chat_bot():
     company_name = request.args.get("company_name")
     company_site = request.args.get("company_site")
     question = request.args.get("question")
-    if company_site not in askServiceMap:
-        askServiceMap[company_site] = AskService(company_name, company_site)
+    if company_site not in chatServiceMap:
+        chatServiceMap[company_site] = ChatService(company_name, company_site)
 
-    ask_service = askServiceMap[company_site]
+    ask_service = chatServiceMap[company_site]
     return ask_service.ask_question(question)
