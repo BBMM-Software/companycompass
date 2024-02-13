@@ -1,13 +1,5 @@
-import textwrap as tr
-from typing import List, Optional
-
-import matplotlib.pyplot as plt
-import plotly.express as px
+from typing import List
 from scipy import spatial
-from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
-from sklearn.metrics import average_precision_score, precision_recall_curve
-from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
 def distances_from_embeddings(

@@ -3,10 +3,7 @@ numpy
 requests
 beautifulsoup4
 tiktoken
-matplotlib
-plotly
 scipy
-scikit-learn
 python-dotenv
 flask
 flask_cors
