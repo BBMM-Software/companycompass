@@ -5,44 +5,45 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # Search companies by name return large array
 # For now used for testing
 def search_company_data(company_name):
-	url = 'https://data.veridion.com/search/v1/companies'
-	headers = {
-			'x-api-key': os.environ["VERIDION_SEARCH_API_KEY"],
-			'Content-type': 'application/json',
-	}
-	data = {
-    'filters': [
-        {
-            'attribute': 'company_name',
-            'relation': 'matches',
-            'value': company_name,
-        }
-    ]
-	}
+    url = 'https://data.veridion.com/search/v1/companies'
+    headers = {
+        'x-api-key': os.environ["VERIDION_SEARCH_API_KEY"],
+        'Content-type': 'application/json',
+    }
+    data = {
+        'filters': [
+            {
+                'attribute': 'company_name',
+                'relation': 'matches',
+                'value': company_name,
+            }
+        ]
+    }
 
-	response = requests.post(url, headers=headers, data=json.dumps(data))
-	if response.status_code == 200:
-		return response.json()
-	
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    if response.status_code == 200:
+        return response.json()
+
 
 def get_company_data(company_name, website):
-	url = 'https://data.veridion.com/match/v4/companies'
-	headers = {
-			'x-api-key':os.environ["VERIDION_MATCH_API_KEY"],
-			'Content-type': 'application/json',
-	}
-	data = {
-			'commercial_names': [company_name],
-			'website': website,
-	}
+    url = 'https://data.veridion.com/match/v4/companies'
+    headers = {
+        'x-api-key': os.environ["VERIDION_MATCH_API_KEY"],
+        'Content-type': 'application/json',
+    }
+    data = {
+        'commercial_names': [company_name],
+        'website': website,
+    }
 
-	response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(url, headers=headers, data=json.dumps(data))
 
-	if response.status_code == 200:
-		return response.json()
+    if response.status_code == 200:
+        return response.json()
 
 
 def describe_company(data):
@@ -53,7 +54,8 @@ def describe_company(data):
         description += f" also known as {', '.join(data['company_commercial_names'])},"
     if 'company_legal_names' in data and data['company_legal_names']:
         description += f" is legally registered as {', '.join(data['company_legal_names'])}. "
-    if all(key in data for key in ['main_city', 'main_region', 'main_country', 'main_street_number', 'main_street', 'main_postcode']):
+    if all(key in data for key in
+           ['main_city', 'main_region', 'main_country', 'main_street_number', 'main_street', 'main_postcode']):
         description += f"It is primarily located in {data['main_city']}, {data['main_region']}, {data['main_country']} at {data['main_street_number']} {data['main_street']}, {data['main_postcode']}. "
     if 'primary_phone' in data and data['primary_phone']:
         description += f"The company's main phone number is {data['primary_phone']}"
@@ -87,14 +89,14 @@ def describe_company(data):
         description += f" and the ISIC code is {data['isic_v4'][0]['code']}. "
     if 'technologies' in data and data['technologies']:
         description += f"The company's technologies are {', '.join(data['technologies'])}. "
-    
+
     if 'locations' in data and len(data['locations']) > 1:
         description += "The company also has other locations: "
         for location in data['locations'][1:]:
             description += f"{location['city']}, {location['region']}, {location['country']}; "
-    
+
     return description
+
 
 def get_hr_parsed(company_name, company_website_url):
     return describe_company(get_company_data(company_name, company_website_url))
-     

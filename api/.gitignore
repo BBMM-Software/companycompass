@@ -1,4 +1,4 @@
-vendor
-src/pkg
-.idea
-credentials.txt
+.env
+__pycache__
+data
+text

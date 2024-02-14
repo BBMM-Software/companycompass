@@ -1,0 +1,11 @@
+pandas
+numpy
+requests
+beautifulsoup4
+tiktoken
+scipy
+python-dotenv
+flask
+flask_cors
+flask_api
+openai
