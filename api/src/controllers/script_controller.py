@@ -3,11 +3,14 @@ from urllib.parse import urlparse
 from src.services.crawl_service import crawl, create_csv
 
 from flask import Blueprint, request
+from flask_api import status
 
-script = Blueprint('script', __name__)
+script = Blueprint("script", __name__)
+
 
 def check_true(text: str):
     return text.lower() == "true"
+
 
 @script.route("/")
 def retrieve():
@@ -16,7 +19,7 @@ def retrieve():
     with open("static/" + domain + ".js") as f:
         content = f.read()
         f.close()
-    return content, 200
+    return content, status.HTTP_200_OK
 
 
 @script.route("/generate")
@@ -24,6 +27,7 @@ def generate():
     company_name = request.args.get("company_name")
     company_url = request.args.get("company_url")
 
+    # TODO: detect if the site has been already crawled on and default false, rename crawl to update
     crawl_ = request.args.get("crawl", default=True, type=check_true)
 
     domain = urlparse(company_url).netloc
@@ -51,4 +55,4 @@ def generate():
 
     src = '<script src="' + os.getenv("API_URL") + path_var + '"></script>'
 
-    return src, 201
+    return src, status.HTTP_201_CREATED
