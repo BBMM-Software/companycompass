@@ -24,7 +24,7 @@ def generate():
     company_name = request.args.get("company_name")
     company_url = request.args.get("company_url")
 
-    crawl_ = request.args.get("crawl", default=False, type=check_true)
+    crawl_ = request.args.get("crawl", default=True, type=check_true)
 
     domain = urlparse(company_url).netloc
     file_path = "static/" + domain + ".js"
