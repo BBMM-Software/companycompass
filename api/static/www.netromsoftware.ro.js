@@ -5,8 +5,8 @@ const ConvertStringToHTML = function (str) {
 };
 
 const server_url = "http://127.0.0.1:8080/api/chat?";
-const company_name = "netrom"
-const company_website = "https://www.netrom.nl/"
+const company_name = "Netrom"
+const company_website = "https://www.netromsoftware.ro/"
 
 const run = function () {
     const str = `<button

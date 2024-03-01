@@ -15,6 +15,7 @@ from src.openai_client import openai_client as client
 
 HTTP_URL_PATTERN = r"^http[s]*://.+"
 
+
 class HyperlinkParser(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -131,13 +132,13 @@ def crawl(url):
 
         # Save text from the url to a <url>.txt file
         with open(
-            "text/"
-            + local_domain
-            + "/"
-            + url[8:].replace("/", "_").replace("?", "_").replace("&", "_")
-            + ".txt",
-            "w",
-            encoding="utf-8",
+                "text/"
+                + local_domain
+                + "/"
+                + url[8:].replace("/", "_").replace("?", "_").replace("&", "_")
+                + ".txt",
+                "w",
+                encoding="utf-8",
         ) as f:
             # Get the text from the URL using BeautifulSoup
             soup = BeautifulSoup(requests.get(url).text, "html.parser")
