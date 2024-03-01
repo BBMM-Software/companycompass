@@ -7,7 +7,7 @@ import pandas as pd
 from scipy import spatial
 
 from src.openai_client import openai_client as client
-from src.services.company_service import get_company_description
+from src.services.company_service import get_description
 
 CONTEXT_LENGTH = 1800
 
@@ -36,7 +36,7 @@ class ChatService:
         # Create a context for a question by finding the most similar context from the dataframe
 
         # Get the embeddings for the question
-        q_embeddings = (self.client.embeddings.create(input=question, model="text-embedding-ada-002").data[0].embedding)
+        q_embeddings = self.client.embeddings.create(input=question, model="text-embedding-ada-002").data[0].embedding
 
         # Get the distances from the embeddings
         self.data["distances"] = distances_from_embeddings(q_embeddings, self.data["embeddings"].values,
@@ -65,23 +65,23 @@ class ChatService:
 
         context = self.create_context(question, max_len=CONTEXT_LENGTH, )
         message = [{"role": "system",
-                    "content": "You will be answering questions exclusively about the following company: " + get_company_description(
-                        company_website=self.company_site) + ". Act like a bot helping a "
-                                                             "user that"
-                                                             "visits the company website "
-                                                             "by"
-                                                             "providing"
-                                                             "information about the "
-                                                             "specified company. The "
-                                                             "information"
-                                                             "from the website is"
-                                                             "summarized using only the "
-                                                             "provided description and the"
-                                                             "following context. Limit"
-                                                             "your knowledge and do not "
-                                                             "answer questions outside "
-                                                             "this"
-                                                             "scope.\n\n", },
+                    "content": "You will be answering questions exclusively about the following company: " + get_description(
+                        website=self.company_site) + ". Act like a bot helping a "
+                                                     "user that"
+                                                     "visits the company website "
+                                                     "by"
+                                                     "providing"
+                                                     "information about the "
+                                                     "specified company. The "
+                                                     "information"
+                                                     "from the website is"
+                                                     "summarized using only the "
+                                                     "provided description and the"
+                                                     "following context. Limit"
+                                                     "your knowledge and do not "
+                                                     "answer questions outside "
+                                                     "this"
+                                                     "scope.\n\n", },
                    {"role": "system", "content": "Context: " + context + "\n\n"},
                    {"role": "user", "content": question + "\n"}, ]
         try:
