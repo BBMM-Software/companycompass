@@ -6,7 +6,7 @@ chat = Blueprint("chat", __name__)
 chatServiceMap = {}
 
 
-@chat.route("/chat")
+@chat.route("/")
 def chat_bot():
     company_name = request.args.get("company_name")
     company_site = request.args.get("company_site")
@@ -15,4 +15,4 @@ def chat_bot():
         chatServiceMap[company_site] = ChatService(company_name, company_site)
 
     ask_service = chatServiceMap[company_site]
-    return ask_service.ask_question(question)
+    return ask_service.ask(question)

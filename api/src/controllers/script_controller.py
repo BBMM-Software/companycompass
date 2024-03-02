@@ -3,7 +3,6 @@ from urllib.parse import urlparse
 from src.services.crawl_service import crawl, create_csv
 
 from flask import Blueprint, request
-from flask_api import status
 
 script = Blueprint("script", __name__)
 
@@ -19,7 +18,7 @@ def retrieve():
     with open("static/" + domain + ".js") as f:
         content = f.read()
         f.close()
-    return content, status.HTTP_200_OK
+    return content, 200
 
 
 @script.route("/generate")
@@ -55,4 +54,4 @@ def generate():
 
     src = '<script src="' + os.getenv("API_URL") + path_var + '"></script>'
 
-    return src, status.HTTP_201_CREATED
+    return src, 201
